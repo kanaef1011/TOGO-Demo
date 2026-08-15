@@ -122,6 +122,7 @@
         object-position: left center;
         display: block;
       }
+
       .navbar-logo-text {
         font-size: 20px;
         font-weight: 600;
@@ -2643,7 +2644,7 @@
                             </div>
                             <div class="activity-actions">
                                 <span class="activity-cost">$${activity.cost}</span>
-                                <button class="btn-small" onclick="bookActivity('${activity.title}')">
+                                <button class="btn-small" onclick="bookActivity('${activity.title}', ${activity.cost})">
                                     <i class="fas fa-check"></i> Book
                                 </button>
                             </div>
@@ -2800,12 +2801,6 @@
             },
           },
         });
-      }
-
-      function bookActivity(activityTitle) {
-        alert(
-          `✓ Booked: ${activityTitle}\n\nCheck your email for confirmation details.`,
-        );
       }
 
       function selectDestination(destination) {
@@ -3312,63 +3307,76 @@
 
       function bookHotel(hotelName, pricePerNight) {
         const destination = preferences.destination;
-        const data = destinationData[destination];
-        const hotel = data.hotels.find((h) => h.name === hotelName);
+
+        // Try to find in destination data, but allow booking even if not found
+        let hotel = null;
+        if (destination && destinationData[destination]) {
+          const data = destinationData[destination];
+          hotel = data.hotels.find((h) => h.name === hotelName);
+        }
 
         currentBooking = {
           type: "hotel",
           name: hotelName,
-          price: pricePerNight,
-          sustainability: hotel ? hotel.sustainability : 50,
+          price: pricePerNight || 0,
+          sustainability: hotel ? hotel.sustainability : 75,
           id: Math.random().toString(36).substr(2, 9),
         };
         openBookingModal(
           "hotel",
           hotelName,
-          pricePerNight,
-          hotel ? hotel.sustainability : 50,
+          pricePerNight || 0,
+          hotel ? hotel.sustainability : 75,
         );
       }
 
       function bookActivity(activityName, pricePerPerson) {
         const destination = preferences.destination;
-        const data = destinationData[destination];
-        const activity = data.activities.find((a) => a.name === activityName);
+
+        // Try to find in destination data, but allow booking even if not found
+        let activity = null;
+        if (destination && destinationData[destination]) {
+          const data = destinationData[destination];
+          activity = data.activities.find((a) => a.name === activityName);
+        }
 
         currentBooking = {
           type: "activity",
           name: activityName,
-          price: pricePerPerson,
-          sustainability: activity ? activity.sustainability : 50,
+          price: pricePerPerson || 0,
+          sustainability: activity ? activity.sustainability : 75,
           id: Math.random().toString(36).substr(2, 9),
         };
         openBookingModal(
           "activity",
           activityName,
-          pricePerPerson,
-          activity ? activity.sustainability : 50,
+          pricePerPerson || 0,
+          activity ? activity.sustainability : 75,
         );
       }
 
       function bookRestaurant(restaurantName, pricePerPerson) {
         const destination = preferences.destination;
-        const data = destinationData[destination];
-        const restaurant = data.restaurants.find(
-          (r) => r.name === restaurantName,
-        );
+
+        // Try to find in destination data, but allow booking even if not found
+        let restaurant = null;
+        if (destination && destinationData[destination]) {
+          const data = destinationData[destination];
+          restaurant = data.restaurants.find((r) => r.name === restaurantName);
+        }
 
         currentBooking = {
           type: "restaurant",
           name: restaurantName,
-          price: pricePerPerson,
-          sustainability: restaurant ? restaurant.sustainability : 50,
+          price: pricePerPerson || 0,
+          sustainability: restaurant ? restaurant.sustainability : 75,
           id: Math.random().toString(36).substr(2, 9),
         };
         openBookingModal(
           "restaurant",
           restaurantName,
-          pricePerPerson,
-          restaurant ? restaurant.sustainability : 50,
+          pricePerPerson || 0,
+          restaurant ? restaurant.sustainability : 75,
         );
       }
 
