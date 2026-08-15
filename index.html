@@ -97,6 +97,7 @@
             color: var(--text-primary);
             height: 100%;
         }
+
 .navbar-logo-icon {
   height: 48px;
   width: 160px;
@@ -113,6 +114,7 @@
   object-position: left center;
   display: block;
 }
+
         .navbar-logo-text {
             font-size: 20px;
             font-weight: 600;
@@ -1127,33 +1129,33 @@
                 <div class="header">
                     <div class="logo">🌍</div>
                     <h1>TOGO</h1>
-                    <p>Your AI-Powered Travel Planner</p>
+                    <p id="home-subtitle">Your AI-Powered Travel Planner</p>
                 </div>
 
                 <div style="max-width: 600px; margin: 0 auto;">
                     <div class="form-group">
-                        <label for="destination">Destination</label>
+                        <label for="destination" id="destination-label">Destination</label>
                         <input type="text" id="destination" placeholder="e.g., Paris, Tokyo, Bali">
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="start-date">Start Date</label>
+                            <label for="start-date" id="start-date-label">Start Date</label>
                             <input type="date" id="start-date">
                         </div>
                         <div class="form-group">
-                            <label for="end-date">End Date</label>
+                            <label for="end-date" id="end-date-label">End Date</label>
                             <input type="date" id="end-date">
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="budget">Budget (USD)</label>
+                            <label for="budget" id="budget-label">Budget (USD)</label>
                             <input type="number" id="budget" placeholder="5000">
                         </div>
                         <div class="form-group">
-                            <label for="travelers">Number of Travelers</label>
+                            <label for="travelers" id="travelers-label">Number of Travelers</label>
                             <select id="travelers">
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -1167,7 +1169,7 @@
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="kids">Children</label>
+                            <label for="kids" id="kids-label">Children</label>
                             <select id="kids">
                                 <option value="0">0</option>
                                 <option value="1">1</option>
@@ -1312,8 +1314,8 @@
             <!-- Budget Page -->
             <div id="budget-page" class="page">
                 <div class="header">
-                    <h1>Budget Tracking</h1>
-                    <p>Monitor your travel expenses</p>
+                    <h1 id="budget-title">Budget Tracking</h1>
+                    <p id="budget-subtitle">Monitor your travel expenses</p>
                 </div>
 
                 <div class="metrics">
@@ -1387,6 +1389,32 @@
                         <input type="checkbox" id="notify-sustainability" checked>
                         <label for="notify-sustainability" style="margin: 0; cursor: pointer;">Sustainability Tips</label>
                     </div>
+                </div>
+
+                <div class="modal-section">
+                    <label>Language</label>
+                    <select id="language-select" onchange="changeLanguage(this.value)" style="width: 100%; padding: 0.75rem; border: 0.5px solid var(--border-color); border-radius: 8px;">
+                        <option value="en">🇺🇸 English</option>
+                        <option value="vi">🇻🇳 Tiếng Việt (Vietnamese)</option>
+                        <option value="es">🇪🇸 Español (Spanish)</option>
+                        <option value="fr">🇫🇷 Français (French)</option>
+                        <option value="de">🇩🇪 Deutsch (German)</option>
+                        <option value="it">🇮🇹 Italiano (Italian)</option>
+                        <option value="pt">🇵🇹 Português (Portuguese)</option>
+                        <option value="ja">🇯🇵 日本語 (Japanese)</option>
+                        <option value="zh">🇨🇳 中文 (Chinese)</option>
+                        <option value="ko">🇰🇷 한국어 (Korean)</option>
+                        <option value="ru">🇷🇺 Русский (Russian)</option>
+                        <option value="th">🇹🇭 ไทย (Thai)</option>
+                        <option value="id">🇮🇩 Bahasa Indonesia</option>
+                        <option value="hi">🇮🇳 हिन्दी (Hindi)</option>
+                        <option value="ar">🇸🇦 العربية (Arabic)</option>
+                        <option value="tr">🇹🇷 Türkçe (Turkish)</option>
+                        <option value="pl">🇵🇱 Polski (Polish)</option>
+                        <option value="nl">🇳🇱 Nederlands (Dutch)</option>
+                        <option value="sv">🇸🇪 Svenska (Swedish)</option>
+                        <option value="no">🇳🇴 Norsk (Norwegian)</option>
+                    </select>
                 </div>
 
                 <div class="modal-section">
@@ -1594,6 +1622,107 @@
                 ]
             }
         };
+
+        // Language Translations
+        const translations = {
+            en: {
+                home: 'Home',
+                explore: 'Explore',
+                schedule: 'Schedule',
+                budget: 'Budget',
+                chat: 'Chat',
+                destination: 'Destination',
+                startDate: 'Start Date',
+                endDate: 'End Date',
+                budgetLabel: 'Budget',
+                travelers: 'Travelers',
+                children: 'Children',
+                travelPrefs: 'Travel Preferences (Optional)',
+                generate: 'Generate My Itinerary',
+                selectDest: 'Select a Destination First',
+                hotels: 'Hotels',
+                activities: 'Activities',
+                restaurants: 'Restaurants',
+                sustainable: 'Sustainable',
+                yourItinerary: 'Your Itinerary',
+                budgetTracking: 'Budget Tracking',
+                monitorExpenses: 'Monitor your travel expenses',
+                aiChat: 'AI Travel Assistant',
+                settings: 'Settings',
+                theme: 'Theme',
+                language: 'Language',
+                currency: 'Default Currency',
+                notifications: 'Notification Preferences',
+                bookingConfirm: 'Booking Confirmations',
+                specialDeals: 'Special Deals & Offers',
+                sustainabilityTips: 'Sustainability Tips',
+                account: 'Account',
+                profile: 'Profile Settings',
+                privacy: 'Privacy & Safety',
+                signOut: 'Sign Out',
+                book: 'Book',
+                reserve: 'Reserve',
+                bookNow: 'Book Now',
+                demoRainy: 'Rainy Day',
+                demoCrowded: 'Crowded Place',
+                demoEco: 'Eco Tips',
+                ecoHotels: 'Eco-Friendly Hotels (90%+)',
+                ecoActivities: 'Eco-Friendly Activities (85%+)',
+                ecoRestaurants: 'Eco-Friendly Restaurants (80%+)'
+            },
+            vi: {
+                home: 'Trang chủ',
+                explore: 'Khám phá',
+                schedule: 'Lịch trình',
+                budget: 'Ngân sách',
+                chat: 'Chat',
+                destination: 'Điểm đến',
+                startDate: 'Ngày bắt đầu',
+                endDate: 'Ngày kết thúc',
+                budgetLabel: 'Ngân sách',
+                travelers: 'Du khách',
+                children: 'Trẻ em',
+                travelPrefs: 'Sở thích du lịch (Tùy chọn)',
+                generate: 'Tạo lịch trình của tôi',
+                selectDest: 'Chọn điểm đến trước',
+                hotels: 'Khách sạn',
+                activities: 'Hoạt động',
+                restaurants: 'Nhà hàng',
+                sustainable: 'Bền vững',
+                yourItinerary: 'Lịch trình của bạn',
+                budgetTracking: 'Theo dõi ngân sách',
+                monitorExpenses: 'Theo dõi chi phí du lịch của bạn',
+                aiChat: 'Trợ lý Du lịch AI',
+                settings: 'Cài đặt',
+                theme: 'Chủ đề',
+                language: 'Ngôn ngữ',
+                currency: 'Tiền tệ mặc định',
+                notifications: 'Tùy chọn thông báo',
+                bookingConfirm: 'Xác nhận đặt phòng',
+                specialDeals: 'Ưu đãi & Khuyến mại',
+                sustainabilityTips: 'Mẹo bền vững',
+                account: 'Tài khoản',
+                profile: 'Cài đặt hồ sơ',
+                privacy: 'Bảo mật & An toàn',
+                signOut: 'Đăng xuất',
+                book: 'Đặt',
+                reserve: 'Đặt bàn',
+                bookNow: 'Đặt ngay',
+                demoRainy: 'Trời mưa',
+                demoCrowded: 'Nơi đông đúc',
+                demoEco: 'Mẹo Xanh',
+                ecoHotels: 'Khách sạn Bền vững (90%+)',
+                ecoActivities: 'Hoạt động Bền vững (85%+)',
+                ecoRestaurants: 'Nhà hàng Bền vững (80%+)'
+            }
+        };
+
+        // Current Language
+        let currentLanguage = localStorage.getItem('language') || 'en';
+
+        function t(key) {
+            return translations[currentLanguage]?.[key] || translations['en'][key] || key;
+        }
 
         const sampleActivities = [
             { title: 'City Walking Tour', cost: 45, time: '09:00 AM', duration: '4 hours', type: 'tour', icon: '🚶', sustainability: 95 },
@@ -1872,11 +2001,81 @@
             }
         }
 
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('language', lang);
+            updatePageLanguage();
+            showNotification('🌐 Language Changed', `Language changed to ${lang === 'vi' ? 'Tiếng Việt' : 'English'}`, 'success');
+        }
+
+        function updatePageLanguage() {
+            // Update page labels and titles
+            const elementTranslations = {
+                'home-subtitle': 'Your AI-Powered Travel Planner',
+                'destination-label': t('destination'),
+                'start-date-label': t('startDate'),
+                'end-date-label': t('endDate'),
+                'budget-label': t('budgetLabel'),
+                'travelers-label': t('travelers'),
+                'kids-label': t('children'),
+                'schedule-title': t('yourItinerary'),
+                'budget-title': t('budgetTracking'),
+                'budget-subtitle': t('monitorExpenses'),
+                'chat-title': t('aiChat'),
+                'explore-header': t('explore'),
+                'settings-title': t('settings')
+            };
+
+            // Apply translations to elements with matching IDs
+            Object.entries(elementTranslations).forEach(([id, text]) => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = text;
+                }
+            });
+
+            // Update navigation labels if they exist
+            const navItems = document.querySelectorAll('.nav-item');
+            const navLabels = ['home', 'explore', 'schedule', 'budget', 'chat'];
+            navItems.forEach((item, idx) => {
+                if (navLabels[idx]) {
+                    const span = item.querySelector('span');
+                    if (span) {
+                        span.textContent = t(navLabels[idx]);
+                    }
+                }
+            });
+
+            // Update form labels
+            const labels = document.querySelectorAll('label');
+            labels.forEach(label => {
+                const text = label.textContent.trim();
+                if (text === 'Destination') label.textContent = t('destination');
+                if (text === 'Start Date') label.textContent = t('startDate');
+                if (text === 'End Date') label.textContent = t('endDate');
+                if (text === 'Budget (USD)') label.textContent = t('budgetLabel') + ' (USD)';
+                if (text === 'Number of Travelers') label.textContent = t('travelers');
+                if (text === 'Children') label.textContent = t('children');
+                if (text === 'Travel Preferences (Optional)') label.textContent = t('travelPrefs');
+            });
+
+            // Update button text
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(btn => {
+                const text = btn.textContent.trim();
+                if (text.includes('Generate My Itinerary')) {
+                    btn.innerHTML = `<i class="fas fa-magic"></i> ${t('generate')}`;
+                }
+            });
+        }
+
         // Load saved theme on page load
         window.addEventListener('load', () => {
             const savedTheme = localStorage.getItem('theme');
             const themeSelect = document.getElementById('theme-select');
+            const languageSelect = document.getElementById('language-select');
             
+            // Load theme
             if (savedTheme) {
                 document.documentElement.setAttribute('data-mode', savedTheme);
                 themeSelect.value = savedTheme;
@@ -1884,6 +2083,16 @@
                 document.documentElement.removeAttribute('data-mode');
                 themeSelect.value = 'auto';
             }
+
+            // Load language
+            const savedLanguage = localStorage.getItem('language') || 'en';
+            currentLanguage = savedLanguage;
+            if (languageSelect) {
+                languageSelect.value = savedLanguage;
+            }
+            
+            // Update page language
+            updatePageLanguage();
         });
 
         // Close settings modal when clicking outside
