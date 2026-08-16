@@ -1119,6 +1119,15 @@
         .listing-card > div {
           flex-direction: column;
         }
+
+        #sustainability-card-schedule {
+          padding: 1rem !important;
+        }
+
+        #sustainability-card-schedule > div {
+          grid-template-columns: 1fr !important;
+          gap: 1rem !important;
+        }
       }
     </style>
   </head>
@@ -1484,6 +1493,74 @@
         <div id="schedule-page" class="page">
           <div class="header">
             <h1 id="schedule-title">Your Itinerary</h1>
+          </div>
+
+          <!-- Sustainability Rating & Discount Code -->
+          <div
+            id="sustainability-card-schedule"
+            style="
+              background-color: var(--primary-green-light);
+              border: 1px solid var(--primary-green);
+              border-radius: 8px;
+              padding: 1.5rem;
+              margin-bottom: 2rem;
+            "
+          >
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+                align-items: center;
+              "
+            >
+              <div>
+                <div
+                  style="
+                    font-size: 14px;
+                    color: var(--text-secondary);
+                    margin-bottom: 0.5rem;
+                    font-weight: 600;
+                  "
+                >
+                  🌍 Trip Sustainability Rating
+                </div>
+                <div
+                  style="
+                    font-size: 36px;
+                    font-weight: 700;
+                    color: var(--primary-green);
+                    margin-bottom: 1rem;
+                  "
+                  id="schedule-rating"
+                >
+                  0%
+                </div>
+                <div
+                  style="
+                    width: 100%;
+                    height: 10px;
+                    background: rgba(59, 109, 17, 0.2);
+                    border-radius: 5px;
+                    overflow: hidden;
+                  "
+                >
+                  <div
+                    id="schedule-rating-bar"
+                    style="
+                      width: 0%;
+                      height: 100%;
+                      background: var(--primary-green);
+                      border-radius: 5px;
+                      transition: width 0.3s ease;
+                    "
+                  ></div>
+                </div>
+              </div>
+              <div id="discount-code-section">
+                <!-- Populated by JavaScript -->
+              </div>
+            </div>
           </div>
 
           <div id="itinerary-container"></div>
@@ -2600,6 +2677,83 @@
           `Your ${destination} Itinerary`;
       }
 
+      function getDiscountCode(tripRating) {
+        let discountCode = "";
+        let discountPercent = 0;
+        let discountTier = "";
+
+        if (tripRating >= 90) {
+          discountCode = "ECO15PLATINUM";
+          discountPercent = 15;
+          discountTier = "🌟 Platinum";
+        } else if (tripRating >= 80) {
+          discountCode = "ECO10GOLD";
+          discountPercent = 10;
+          discountTier = "💚 Gold";
+        } else if (tripRating >= 70) {
+          discountCode = "ECO5SILVER";
+          discountPercent = 5;
+          discountTier = "🌱 Silver";
+        }
+
+        return { discountCode, discountPercent, discountTier };
+      }
+
+      function updateScheduleSustainability() {
+        const tripRating = getTripSustainabilityRating();
+        const ratingBar = document.getElementById("schedule-rating-bar");
+        const ratingText = document.getElementById("schedule-rating");
+        const discountSection = document.getElementById(
+          "discount-code-section",
+        );
+
+        // Update rating display
+        ratingText.textContent = `${tripRating}%`;
+        ratingBar.style.width = `${tripRating}%`;
+
+        // Update rating color
+        let ratingColor = "#e74c3c";
+        if (tripRating >= 80) ratingColor = "#2ecc71";
+        else if (tripRating >= 70) ratingColor = "#f39c12";
+
+        ratingText.style.color = ratingColor;
+        ratingBar.style.backgroundColor = ratingColor;
+
+        // Get discount code
+        const { discountCode, discountPercent, discountTier } =
+          getDiscountCode(tripRating);
+
+        // Update discount section
+        if (discountCode) {
+          discountSection.innerHTML = `
+                    <div style="text-align: center; background-color: white; border: 2px solid var(--primary-green); border-radius: 8px; padding: 1rem;">
+                        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 0.5rem;">🎉 Voucher Unlocked!</div>
+                        <div style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.75rem;">${discountTier}</div>
+                        <div style="background: #f0f7ef; border: 1px dashed var(--primary-green); border-radius: 6px; padding: 0.75rem; margin-bottom: 0.75rem;">
+                            <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 0.5rem;">Discount Code</div>
+                            <div style="font-size: 18px; font-weight: 700; color: var(--primary-green); font-family: monospace;">${discountCode}</div>
+                        </div>
+                        <div style="font-size: 12px; color: var(--primary-green); font-weight: 600;">${discountPercent}% off booking</div>
+                    </div>
+                `;
+        } else {
+          const remainingPercent = 70 - tripRating;
+          discountSection.innerHTML = `
+                    <div style="text-align: center; background-color: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem;">
+                        <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 1rem;">
+                            <span style="font-size: 12px; display: block; margin-bottom: 0.5rem;">Almost there!</span>
+                            <span style="display: block; font-weight: 600; color: var(--text-primary);">+${remainingPercent}% more to unlock</span>
+                        </div>
+                        <div style="background: #fff9e6; border: 1px solid #f39c12; border-radius: 6px; padding: 0.75rem;">
+                            <div style="font-size: 12px; color: #e67e22; line-height: 1.4;">
+                                💡 Try booking more sustainable itineraries to get a free voucher!
+                            </div>
+                        </div>
+                    </div>
+                `;
+        }
+      }
+
       function renderItinerary() {
         const container = document.getElementById("itinerary-container");
         container.innerHTML = "";
@@ -2620,6 +2774,7 @@
                 : activity.sustainability >= 70
                   ? "#f39c12"
                   : "#e74c3c";
+            const isBooked = activity.booked || false;
 
             activitiesHTML += `
                         <div class="activity-item" draggable="true" id="activity-${activity.id}" 
@@ -2629,6 +2784,7 @@
                                 <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
                                     <div class="activity-title">${activity.icon} ${activity.title}</div>
                                     ${isSustainable ? '<span style="background: #e8f5e9; color: #2ecc71; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">🌱 Sustainable</span>' : ""}
+                                    ${isBooked ? '<span style="background: #c8e6c9; color: #2e7d32; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">✓ Booked</span>' : ""}
                                 </div>
                                 <div class="activity-time">${activity.time} • ${activity.duration}</div>
                                 <div style="display: flex; align-items: center; gap: 0.75rem; margin-top: 0.5rem;">
@@ -2644,8 +2800,8 @@
                             </div>
                             <div class="activity-actions">
                                 <span class="activity-cost">$${activity.cost}</span>
-                                <button class="btn-small" onclick="bookActivity('${activity.title}', ${activity.cost})">
-                                    <i class="fas fa-check"></i> Book
+                                <button class="btn-small" onclick="bookActivity('${activity.title}', ${activity.cost})" ${isBooked ? 'disabled style="opacity: 0.6; cursor: not-allowed;"' : ""}>
+                                    <i class="fas ${isBooked ? "fa-check-circle" : "fa-check"}"></i> ${isBooked ? "Booked" : "Book"}
                                 </button>
                             </div>
                         </div>
@@ -2657,6 +2813,9 @@
           dayDiv.innerHTML = activitiesHTML;
           container.appendChild(dayDiv);
         });
+
+        // Update sustainability rating in schedule
+        updateScheduleSustainability();
       }
 
       function startDrag(e, day, activityId) {
@@ -2699,6 +2858,19 @@
         draggedElement = null;
       }
 
+      function getTripSustainabilityRating() {
+        if (!currentItinerary) return 0;
+
+        const activities = Object.values(currentItinerary).flat();
+        if (activities.length === 0) return 0;
+
+        const totalSustainability = activities.reduce(
+          (sum, activity) => sum + (activity.sustainability || 0),
+          0,
+        );
+        return Math.round(totalSustainability / activities.length);
+      }
+
       function updateBudgetDisplay() {
         if (!currentItinerary) return;
 
@@ -2735,6 +2907,9 @@
           .join("");
 
         document.getElementById("expense-breakdown").innerHTML = expenseHtml;
+
+        // Update sustainability rating display
+        updateScheduleSustainability();
       }
 
       function initBudgetChart() {
@@ -3486,36 +3661,19 @@
 
         const totalCost = currentBooking.price * quantity;
 
-        // Add to itinerary if available
+        // Mark existing activities as booked
         if (currentItinerary && preferences.destination) {
-          const newActivity = {
-            title: currentBooking.name,
-            cost: totalCost,
-            time: "10:00 AM",
-            duration:
-              currentBooking.type === "hotel"
-                ? `${quantity} nights`
-                : "2-3 hours",
-            type: currentBooking.type,
-            icon:
-              currentBooking.type === "hotel"
-                ? "🏨"
-                : currentBooking.type === "activity"
-                  ? "🎫"
-                  : "🍽️",
-            id: currentBooking.id,
-            bookingDate: checkinDate,
-            notes: specialRequests,
-            sustainability: currentBooking.sustainability,
-          };
+          // Find and mark the activity as booked in the itinerary
+          Object.values(currentItinerary).forEach((dayActivities) => {
+            dayActivities.forEach((activity) => {
+              if (activity.title === currentBooking.name) {
+                activity.booked = true;
+              }
+            });
+          });
 
-          // Add to first available day
-          const firstDay = Object.keys(currentItinerary)[0];
-          if (firstDay) {
-            currentItinerary[firstDay].push(newActivity);
-            renderItinerary();
-            updateBudgetDisplay();
-          }
+          renderItinerary();
+          updateBudgetDisplay();
         }
 
         // Show success message
@@ -3525,7 +3683,14 @@
 
         bookingForm.style.display = "none";
         bookingSuccess.classList.add("active");
-        successMessage.textContent = `Your booking for ${currentBooking.name} (${quantity} unit${quantity > 1 ? "s" : ""}) has been added to your itinerary for $${totalCost.toLocaleString()}. Sustainability score: ${currentBooking.sustainability}%`;
+        successMessage.textContent = `✓ BOOKED!\n\nYour booking for ${currentBooking.name} (${quantity} unit${quantity > 1 ? "s" : ""}) has been confirmed for $${totalCost.toLocaleString()}. Sustainability score: ${currentBooking.sustainability}%`;
+
+        // Show notification
+        showNotification(
+          "✓ Booking Confirmed",
+          `${currentBooking.name} has been booked successfully!`,
+          "success",
+        );
 
         // Auto close after 3 seconds
         setTimeout(() => {
