@@ -234,7 +234,6 @@
         font-size: 32px;
         color: var(--primary-green);
       }
-
       .logo img {
         height: 60px;
         width: auto;
@@ -877,12 +876,19 @@
         align-items: center;
         justify-content: center;
         gap: 0.5rem;
+        min-height: 44px;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
       }
 
       .pref-btn:hover {
         border-color: var(--primary-green);
         color: var(--primary-green);
         background-color: var(--primary-green-light);
+      }
+
+      .pref-btn:active {
+        transform: scale(0.98);
       }
 
       .pref-btn.active {
@@ -894,6 +900,17 @@
       .pref-btn.active:hover {
         background-color: var(--primary-green-hover);
         border-color: var(--primary-green-hover);
+      }
+
+      .pref-btn.active:active {
+        transform: scale(0.98);
+      }
+
+      /* Ensure buttons are clickable on mobile */
+      .pref-btn,
+      .demo-btn {
+        pointer-events: auto;
+        touch-action: manipulation;
       }
 
       /* Demo Buttons */
@@ -921,6 +938,21 @@
 
       .demo-btn:active {
         transform: translateY(0);
+      }
+
+      /* Preference Buttons Grid - Responsive */
+      #pref-buttons-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+        width: 100%;
+      }
+
+      @media (max-width: 480px) {
+        #pref-buttons-grid {
+          grid-template-columns: 1fr;
+          gap: 0.5rem;
+        }
       }
       .main-content::-webkit-scrollbar {
         width: 6px;
@@ -1132,6 +1164,47 @@
           grid-template-columns: 1fr !important;
           gap: 1rem !important;
         }
+
+        #pref-buttons-grid {
+          grid-template-columns: 1fr;
+          gap: 0.5rem;
+        }
+
+        .pref-btn {
+          padding: 0.85rem 1rem;
+          min-height: 48px;
+          font-size: 14px;
+        }
+
+        .demo-btn {
+          padding: 0.75rem 0.75rem;
+          font-size: 12px;
+          min-height: 44px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        #pref-buttons-grid {
+          grid-template-columns: 1fr;
+          gap: 0.5rem;
+        }
+
+        .pref-btn {
+          padding: 0.9rem 1rem;
+          min-height: 50px;
+          font-size: 13px;
+          gap: 0.75rem;
+        }
+
+        .pref-btn.active {
+          box-shadow: 0 0 0 3px rgba(59, 109, 17, 0.2);
+        }
+
+        .demo-btn {
+          padding: 0.8rem 0.6rem;
+          font-size: 11px;
+          min-height: 46px;
+        }
       }
     </style>
   </head>
@@ -1230,6 +1303,7 @@
             <div class="form-group">
               <label>Travel Preferences (Optional)</label>
               <div
+                id="pref-buttons-grid"
                 style="
                   display: grid;
                   grid-template-columns: 1fr 1fr;
@@ -1240,7 +1314,7 @@
                   type="button"
                   class="pref-btn"
                   id="pref-btn-budget"
-                  onclick="togglePref(this, 'budget')"
+                  onclick="return togglePref(this, 'budget');"
                 >
                   💰 Budget Travel
                 </button>
@@ -1248,7 +1322,7 @@
                   type="button"
                   class="pref-btn"
                   id="pref-btn-adventure"
-                  onclick="togglePref(this, 'adventure')"
+                  onclick="return togglePref(this, 'adventure');"
                 >
                   🎯 Adventure
                 </button>
@@ -1256,7 +1330,7 @@
                   type="button"
                   class="pref-btn"
                   id="pref-btn-cultural"
-                  onclick="togglePref(this, 'cultural')"
+                  onclick="return togglePref(this, 'cultural');"
                 >
                   🏛️ Cultural
                 </button>
@@ -1264,7 +1338,7 @@
                   type="button"
                   class="pref-btn"
                   id="pref-btn-beach"
-                  onclick="togglePref(this, 'beach')"
+                  onclick="return togglePref(this, 'beach');"
                 >
                   🏖️ Beach
                 </button>
@@ -1272,7 +1346,7 @@
                   type="button"
                   class="pref-btn"
                   id="pref-btn-luxury"
-                  onclick="togglePref(this, 'luxury')"
+                  onclick="return togglePref(this, 'luxury');"
                 >
                   ✨ Luxury
                 </button>
@@ -1280,7 +1354,7 @@
                   type="button"
                   class="pref-btn active"
                   id="pref-btn-eco"
-                  onclick="togglePref(this, 'eco')"
+                  onclick="return togglePref(this, 'eco');"
                 >
                   🌱 Eco-Friendly
                 </button>
@@ -3146,6 +3220,9 @@
 
         // Update page language
         updatePageLanguage();
+
+        // Initialize preference buttons
+        initPrefButtons();
       });
 
       // Close settings modal when clicking outside
@@ -3155,6 +3232,29 @@
           closeSettings();
         }
       });
+
+      // Initialize preference button touch events
+      function initPrefButtons() {
+        const prefButtons = document.querySelectorAll(".pref-btn");
+        prefButtons.forEach((btn) => {
+          // Add touch visual feedback
+          btn.addEventListener(
+            "touchstart",
+            function (e) {
+              this.style.opacity = "0.8";
+            },
+            { passive: true },
+          );
+
+          btn.addEventListener(
+            "touchend",
+            function (e) {
+              this.style.opacity = "1";
+            },
+            { passive: true },
+          );
+        });
+      }
 
       // Initialize on page load
       if (document.readyState === "loading") {
@@ -3855,7 +3955,22 @@
 
       // Travel Preferences Toggle
       function togglePref(button, prefType) {
-        button.classList.toggle("active");
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+
+        // Remove any active state from other buttons (allow multiple selection)
+        // Just toggle the current button
+        const wasActive = button.classList.contains("active");
+
+        if (wasActive) {
+          button.classList.remove("active");
+        } else {
+          button.classList.add("active");
+        }
+
+        return false;
       }
 
       // Get selected preferences
