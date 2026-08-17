@@ -234,6 +234,7 @@
         font-size: 32px;
         color: var(--primary-green);
       }
+
       .logo img {
         height: 60px;
         width: auto;
@@ -1240,6 +1241,7 @@
                 alt="TOGO Logo"
               />
             </div>
+            <h1>TOGO</h1>
             <p id="home-subtitle">Your AI-Powered Travel Planner</p>
           </div>
 
@@ -2643,7 +2645,7 @@
           duration: "4 hours",
           type: "tour",
           icon: "🚶",
-          sustainability: 95,
+          sustainability: 55,
         },
         {
           title: "Local Restaurant Experience",
@@ -2652,7 +2654,7 @@
           duration: "2 hours",
           type: "dining",
           icon: "🍽️",
-          sustainability: 85,
+          sustainability: 45,
         },
         {
           title: "Beach Visit & Swimming",
@@ -2661,7 +2663,7 @@
           duration: "3 hours",
           type: "activity",
           icon: "🏖️",
-          sustainability: 60,
+          sustainability: 40,
         },
         {
           title: "Sunset Viewpoint",
@@ -2670,7 +2672,7 @@
           duration: "1.5 hours",
           type: "experience",
           icon: "🌅",
-          sustainability: 98,
+          sustainability: 50,
         },
         {
           title: "Evening Entertainment Show",
@@ -2679,7 +2681,7 @@
           duration: "2 hours",
           type: "entertainment",
           icon: "🎭",
-          sustainability: 45,
+          sustainability: 30,
         },
         {
           title: "Museum & Gallery Tour",
@@ -2688,7 +2690,7 @@
           duration: "3 hours",
           type: "culture",
           icon: "🎨",
-          sustainability: 90,
+          sustainability: 50,
         },
         {
           title: "Adventure Sports Activity",
@@ -2697,7 +2699,7 @@
           duration: "3 hours",
           type: "adventure",
           icon: "🎯",
-          sustainability: 55,
+          sustainability: 35,
         },
         {
           title: "Local Market Exploration",
@@ -2706,7 +2708,7 @@
           duration: "2 hours",
           type: "shopping",
           icon: "🛍️",
-          sustainability: 88,
+          sustainability: 45,
         },
       ];
 
@@ -2830,30 +2832,42 @@
         const { discountCode, discountPercent, discountTier } =
           getDiscountCode(tripRating);
 
-        // Update discount section
-        if (discountCode) {
+        // Update discount section - DEFAULT TO NEEDS IMPROVEMENT MESSAGE
+        if (discountCode && tripRating >= 70) {
+          // Show discount code only if qualified
           discountSection.innerHTML = `
-                    <div style="text-align: center; background-color: white; border: 2px solid var(--primary-green); border-radius: 8px; padding: 1rem;">
-                        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 0.5rem;">🎉 Voucher Unlocked!</div>
-                        <div style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.75rem;">${discountTier}</div>
-                        <div style="background: #f0f7ef; border: 1px dashed var(--primary-green); border-radius: 6px; padding: 0.75rem; margin-bottom: 0.75rem;">
-                            <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 0.5rem;">Discount Code</div>
-                            <div style="font-size: 18px; font-weight: 700; color: var(--primary-green); font-family: monospace;">${discountCode}</div>
+                    <div style="text-align: center; background-color: white; border: 2px solid var(--primary-green); border-radius: 8px; padding: 1.5rem;">
+                        <div style="font-size: 12px; color: #2e7d32; font-weight: 600; margin-bottom: 0.75rem;">🎉 Voucher Unlocked!</div>
+                        <div style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">${discountTier}</div>
+                        <div style="background: #f0f7ef; border: 2px solid var(--primary-green); border-radius: 6px; padding: 1rem; margin-bottom: 1rem;">
+                            <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 0.5rem; font-weight: 500;">Your Discount Code</div>
+                            <div style="font-size: 20px; font-weight: 700; color: var(--primary-green); font-family: monospace; letter-spacing: 2px;">${discountCode}</div>
                         </div>
-                        <div style="font-size: 12px; color: var(--primary-green); font-weight: 600;">${discountPercent}% off booking</div>
+                        <div style="font-size: 13px; color: var(--primary-green); font-weight: 600; background: #e8f5e9; padding: 0.5rem; border-radius: 4px;">
+                            💚 ${discountPercent}% off your next booking
+                        </div>
                     </div>
                 `;
         } else {
-          const remainingPercent = 70 - tripRating;
+          // Default: Show recommendation to improve sustainability
+          const remainingPercent = Math.max(0, 70 - tripRating);
+          const targetRating = tripRating > 0 ? 70 - tripRating : 70;
+
           discountSection.innerHTML = `
-                    <div style="text-align: center; background-color: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem;">
-                        <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 1rem;">
-                            <span style="font-size: 12px; display: block; margin-bottom: 0.5rem;">Almost there!</span>
-                            <span style="display: block; font-weight: 600; color: var(--text-primary);">+${remainingPercent}% more to unlock</span>
+                    <div style="text-align: center; background-color: white; border: 1px solid #f39c12; border-radius: 8px; padding: 1.5rem;">
+                        <div style="font-size: 12px; color: #e67e22; font-weight: 600; margin-bottom: 0.75rem;">📊 Discount Qualification</div>
+                        <div style="font-size: 14px; color: var(--text-primary); margin-bottom: 1rem;">
+                            <span style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Reach 70% for your voucher</span>
+                            <span style="font-size: 13px; color: var(--text-secondary);">+${remainingPercent}% needed</span>
                         </div>
-                        <div style="background: #fff9e6; border: 1px solid #f39c12; border-radius: 6px; padding: 0.75rem;">
-                            <div style="font-size: 12px; color: #e67e22; line-height: 1.4;">
-                                💡 Try booking more sustainable itineraries to get a free voucher!
+                        <div style="background: #fffbf0; border: 1px solid #f39c12; border-radius: 6px; padding: 1rem; margin-bottom: 0.75rem;">
+                            <div style="font-size: 13px; color: #e67e22; line-height: 1.6; font-weight: 500;">
+                                💡 Adjust your itinerary to include more sustainable options and unlock your free voucher code!
+                            </div>
+                            <div style="font-size: 11px; color: #d68910; margin-top: 0.75rem; line-height: 1.4;">
+                                ✓ Choose eco-friendly hotels<br>
+                                ✓ Book sustainable activities<br>
+                                ✓ Select green restaurants
                             </div>
                         </div>
                     </div>
